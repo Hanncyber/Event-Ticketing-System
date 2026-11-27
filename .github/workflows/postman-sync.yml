@@ -1,0 +1,28 @@
+﻿name: Postman Cloud Sync
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'postman/**'
+      - '.postman/**'
+      - '.github/workflows/postman-sync.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  sync-postman:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Push Postman workspace to cloud
+        uses: postmanlabs/postman-cli-action@v1
+        with:
+          command: 'workspace push --yes'
+          api-key: ${{ secrets.POSTMAN_API_KEY }}
+          working-directory: .
